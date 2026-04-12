@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0f14">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>PulseTable Mobile</title>
+  <style>
+    :root{
+      --bg:#0b0f14; --panel:#121821; --panel-2:#161d28; --line:rgba(255,255,255,.08);
+      --text:#f4efe8; --muted:#99a3b2; --gold:#d7b07b; --teal:#61d3c4; --green:#78d1a6; --red:#ff8e97;
+      --radius:20px;
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#0b0f14,#0e141c 32%,#0b0f14);color:var(--text)}
+    .app{max-width:760px;margin:0 auto;padding:18px 14px 28px}
+    .hero{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:28px;padding:20px 18px;box-shadow:0 18px 60px rgba(0,0,0,.28)}
+    .eyebrow{display:inline-flex;padding:8px 12px;border-radius:999px;background:rgba(215,176,123,.12);color:var(--gold);font-size:.74rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+    h1{margin:14px 0 10px;font-size:2.1rem;line-height:.95;letter-spacing:-.05em}
+    .sub{margin:0;color:#dde3ea;line-height:1.55;font-size:1rem}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+    .chip{padding:10px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.03);font-size:.86rem;color:var(--muted)}
+    .actions{display:grid;grid-template-columns:1fr;gap:10px;margin-top:16px}
+    button, select, input{font:inherit}
+    .btn{border:none;border-radius:16px;padding:15px 16px;font-weight:800;font-size:1rem;cursor:pointer}
+    .btn-sync{background:linear-gradient(180deg,#79ece0,#61d3c4);color:#061315}
+    .btn-export{background:#1b2330;color:#fff}
+    .btn-reset{background:#3a1820;color:#ffd5d9}
+    .status{min-height:22px;margin-top:12px;font-weight:700;font-size:.92rem}
+    .ok{color:#9df1c7}.err{color:#ffb8bf}
+    .panel{margin-top:14px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:24px;padding:16px}
+    .title{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-weight:800}
+    .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .stat{background:var(--panel-2);border:1px solid var(--line);border-radius:18px;padding:14px}
+    .stat .k{font-size:.76rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+    .stat .v{margin-top:8px;font-size:1.7rem;font-weight:900}
+    .filters{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .field{display:grid;gap:6px}
+    .field label{font-size:.8rem;color:var(--muted);font-weight:700}
+    .field input,.field select{width:100%;padding:14px;border-radius:14px;border:1px solid var(--line);background:#101620;color:var(--text)}
+    .list{display:grid;gap:12px;margin-top:12px}
+    .card{background:var(--panel-2);border:1px solid var(--line);border-radius:22px;padding:16px}
+    .top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+    .badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+    .badge{padding:7px 10px;border-radius:999px;font-size:.75rem;font-weight:800}
+    .b-rist{background:rgba(215,176,123,.14);color:var(--gold)}
+    .b-new{background:rgba(97,211,196,.14);color:var(--teal)}
+    .b-conf{background:rgba(120,209,166,.16);color:var(--green)}
+    .b-ann{background:rgba(255,142,151,.18);color:var(--red)}
+    .name{font-size:1.14rem;font-weight:900;line-height:1.05}
+    .meta{margin-top:3px;color:var(--muted);font-size:.88rem}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+    .info{background:#101620;border:1px solid var(--line);border-radius:16px;padding:12px;font-size:.94rem}
+    .info b{display:block;color:var(--muted);font-size:.73rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
+    .note{margin-top:10px;background:#101620;border:1px solid var(--line);border-radius:16px;padding:12px;color:#dfe5eb}
+    .row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}
+    .row .mini{border:none;border-radius:14px;padding:12px 10px;font-weight:800;cursor:pointer}
+    .green{background:#173326;color:#b4ffd8}.dark{background:#20293a;color:#fff}.red{background:#3a1820;color:#ffd5d9}
+    .empty{padding:22px;text-align:center;color:var(--muted)}
+    .footer{margin-top:16px;text-align:center;color:var(--muted);font-size:.84rem}
+  </style>
+</head>
+<body>
+<div class="app">
+  <section class="hero">
+    <span class="eyebrow">PulseTable Mobile</span>
+    <h1>Dashboard telefono pronta da usare</h1>
+    <p class="sub">Questa versione va aperta come <strong>pagina web vera</strong> dal telefono. Il ponte è già configurato: non devi inserire URL o chiave.</p>
+    <div class="chips">
+      <span class="chip">Sync automatico ogni 60 secondi</span>
+      <span class="chip">Conferma email reale</span>
+      <span class="chip">Vecchie richieste archiviate con Azzera</span>
+    </div>
+    <div class="actions">
+      <button class="btn btn-sync" id="syncBtn">Sincronizza ora</button>
+      <button class="btn btn-export" id="exportBtn">Esporta CSV</button>
+      <button class="btn btn-reset" id="resetBtn">Azzera e archivia vecchie richieste</button>
+    </div>
+    <div id="status" class="status"></div>
+  </section>
+
+  <section class="panel">
+    <div class="title">Riepilogo</div>
+    <div class="stats">
+      <div class="stat"><div class="k">Richieste</div><div class="v" id="sTotal">0</div></div>
+      <div class="stat"><div class="k">Confermate</div><div class="v" id="sConfirmed">0</div></div>
+      <div class="stat"><div class="k">Nuove</div><div class="v" id="sNew">0</div></div>
+      <div class="stat"><div class="k">Coperti</div><div class="v" id="sGuests">0</div></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="title">Filtri veloci</div>
+    <div class="filters">
+      <div class="field"><label>Ristorante</label><select id="fRestaurant"></select></div>
+      <div class="field"><label>Stato</label><select id="fStatus"><option value="">Tutti</option><option>Nuova</option><option>Confermata</option><option>Annullata</option><option>Completata</option></select></div>
+      <div class="field"><label>Data</label><input id="fDate" type="date"></div>
+      <div class="field"><label>Cerca</label><input id="fSearch" type="text" placeholder="Nome, telefono, email"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="title">Prenotazioni</div>
+    <div id="list" class="list"></div>
+    <div id="empty" class="empty">Nessuna prenotazione trovata.</div>
+  </section>
+
+  <div class="footer">Apri questa pagina dal link web e, se vuoi, aggiungila alla schermata Home del telefono.</div>
+</div>
+
+<script>
+const STORAGE_KEY = 'pulsetable_mobile_v1';
+const AUTO_SYNC_MS = 60000;
+const BRIDGE_URL = 'https://script.google.com/macros/s/AKfycbx3OAR1oHYP81_CSF4pdfXRdUK0RgHlBU_NZ3hPt7-ziiFBkw2geMgVHJwXmRpqMf-F_Q/exec';
+const BRIDGE_KEY = 'sorelleponte2025';
+const DEFAULT_RESTAURANTS = ['Tutti i ristoranti','Sorelle a Mare','A·Pollo','Da Carmelo'];
+const app = { reservations: [], archivedBridgeIds: [], resetBefore: null };
+const $ = id => document.getElementById(id);
+let autoSyncTimer = null;
+
+function load(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const parsed = JSON.parse(raw);
+    if(Array.isArray(parsed.reservations)) app.reservations = parsed.reservations;
+    if(Array.isArray(parsed.archivedBridgeIds)) app.archivedBridgeIds = parsed.archivedBridgeIds;
+    if(parsed.resetBefore) app.resetBefore = parsed.resetBefore;
+  }catch(e){console.error(e)}
+}
+function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(app)); }
+function status(msg, ok=true){ const el=$('status'); el.textContent=msg; el.className='status '+(ok?'ok':'err'); }
+function fillRestaurants(){ $('fRestaurant').innerHTML = DEFAULT_RESTAURANTS.map((r,i)=>`<option value="${i===0?'':r}">${r}</option>`).join(''); }
+function badge(status){ return status==='Confermata'?'b-conf':status==='Annullata'?'b-ann':'b-new'; }
+function getItems(){
+  const r=$('fRestaurant').value.trim();
+  const s=$('fStatus').value.trim();
+  const d=$('fDate').value.trim();
+  const q=$('fSearch').value.trim().toLowerCase();
+  return app.reservations.filter(item=>{
+    const hay=`${item.customerName||''} ${item.phone||''} ${item.email||''}`.toLowerCase();
+    return (!r || item.restaurant===r) && (!s || item.status===s) && (!d || item.bookingDate===d) && (!q || hay.includes(q));
+  });
+}
+function render(){
+  const items=getItems();
+  $('sTotal').textContent=items.length;
+  $('sConfirmed').textContent=items.filter(i=>i.status==='Confermata').length;
+  $('sNew').textContent=items.filter(i=>i.status==='Nuova').length;
+  $('sGuests').textContent=items.reduce((n,i)=>n+Number(i.guests||0),0);
+  const list=$('list'); list.innerHTML='';
+  $('empty').style.display = items.length ? 'none' : 'block';
+  items.forEach(item=>{
+    const card=document.createElement('article');
+    card.className='card';
+    card.innerHTML=`
+      <div class="top">
+        <div>
+          <div class="badges"><span class="badge b-rist">${item.restaurant}</span><span class="badge ${badge(item.status)}">${item.status}</span></div>
+          <div class="name">${item.customerName || 'Cliente'}</div>
+          <div class="meta">${item.bookingType || 'Prenotazione'} • ${item.source || 'sito'}</div>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="info"><b>Quando</b>${item.bookingDate || '—'} • ${item.bookingTime || '—'}</div>
+        <div class="info"><b>Persone</b>${item.guests || '—'}</div>
+        <div class="info"><b>Telefono</b>${item.phone || '—'}</div>
+        <div class="info"><b>Email</b>${item.email || '—'}</div>
+      </div>
+      <div class="note"><b style="display:block;color:var(--muted);font-size:.73rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px">Note</b>${item.notes || 'Nessuna nota'}</div>
+      <div class="row">
+        <button class="mini green" data-act="confirm" data-id="${item.id}">Conferma</button>
+        <button class="mini dark" data-act="complete" data-id="${item.id}">Completa</button>
+        <button class="mini red" data-act="cancel" data-id="${item.id}">Annulla</button>
+      </div>`;
+    list.appendChild(card);
+  });
+  document.querySelectorAll('[data-act]').forEach(btn=>btn.onclick=()=>handleAction(btn.dataset.act, btn.dataset.id));
+}
+function handleAction(act,id){
+  const item=app.reservations.find(r=>String(r.id)===String(id));
+  if(!item) return;
+  if(act==='confirm' && item.bridgeId){ confirmViaBridge(item); return; }
+  item.status = act==='complete' ? 'Completata' : act==='cancel' ? 'Annullata' : 'Confermata';
+  save(); render();
+}
+function resetAll(){
+  if(!confirm('Vuoi azzerare e archiviare tutte le richieste attuali?')) return;
+  const idsToArchive = app.reservations.map(i=>i.bridgeId).filter(Boolean);
+  app.archivedBridgeIds = Array.from(new Set([...(app.archivedBridgeIds||[]), ...idsToArchive]));
+  app.resetBefore = new Date().toISOString();
+  app.reservations=[]; save(); render(); status('Dati azzerati. Le vecchie richieste non torneranno più.', true);
+}
+function exportCsv(){
+  const lines=[[ 'Ristorante','Cliente','Telefono','Email','Data','Ora','Persone','Note','Stato' ]];
+  app.reservations.forEach(i=>lines.push([i.restaurant,i.customerName,i.phone,i.email,i.bookingDate,i.bookingTime,i.guests,i.notes,i.status]));
+  const csv=lines.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='prenotazioni-mobile.csv'; a.click();
+}
+function mergeRemote(items){
+  let imported=0;
+  const archivedIds = new Set(app.archivedBridgeIds || []);
+  const resetTime = app.resetBefore ? new Date(app.resetBefore).getTime() : null;
+  items.forEach(remote=>{
+    const bridgeId = remote.id || remote.bridgeId || remote.created_at;
+    const remoteTimeRaw = remote.created_at || remote.createdAt || '';
+    const remoteTime = remoteTimeRaw ? new Date(remoteTimeRaw).getTime() : null;
+    if(bridgeId && archivedIds.has(bridgeId)) return;
+    if(resetTime && remoteTime && remoteTime <= resetTime) return;
+    if(app.reservations.some(i=>i.bridgeId && i.bridgeId===bridgeId)) return;
+    app.reservations.unshift({
+      id: Date.now()+imported,
+      bridgeId,
+      restaurant: remote.restaurant_name || remote.restaurant || 'Sorelle a Mare',
+      bookingType: remote.booking_type || 'Prenotazione',
+      customerName: remote.customer_name || '',
+      phone: remote.phone || '',
+      email: remote.email || '',
+      guests: Number(remote.guests || 0),
+      bookingDate: remote.booking_date || '',
+      bookingTime: remote.booking_time || '',
+      notes: remote.notes || '',
+      status: remote.status || 'Nuova',
+      createdAt: remote.created_at || new Date().toISOString(),
+      source: remote.source || 'website-form'
+    });
+    imported++;
+  });
+  save(); render(); status(imported ? `Sincronizzate ${imported} nuove prenotazioni.` : 'Nessuna nuova prenotazione.', true);
+}
+function sync(){
+  status('Sincronizzazione in corso...', true);
+  const s=document.createElement('script');
+  s.src=`${BRIDGE_URL}?action=list&key=${encodeURIComponent(BRIDGE_KEY)}&callback=PulseTableBridgeSync&_=${Date.now()}`;
+  s.onerror=()=>status('Il ponte non risponde.', false);
+  document.body.appendChild(s); setTimeout(()=>s.remove(),12000);
+}
+function confirmViaBridge(item){
+  status('Conferma in corso...', true);
+  window.__confirmId=item.id;
+  const s=document.createElement('script');
+  s.src=`${BRIDGE_URL}?action=confirm&key=${encodeURIComponent(BRIDGE_KEY)}&id=${encodeURIComponent(item.bridgeId)}&callback=PulseTableBridgeConfirm&_=${Date.now()}`;
+  s.onerror=()=>status('Il ponte non risponde durante la conferma.', false);
+  document.body.appendChild(s); setTimeout(()=>s.remove(),12000);
+}
+window.PulseTableBridgeSync=function(payload){
+  if(!payload || payload.ok===false){ status((payload&&payload.error)||'Errore di sincronizzazione.', false); return; }
+  const items=Array.isArray(payload.rows)?payload.rows:(Array.isArray(payload)?payload:[]);
+  mergeRemote(items);
+}
+window.PulseTableBridgeConfirm=function(payload){
+  const item=app.reservations.find(i=>String(i.id)===String(window.__confirmId));
+  if(!payload || payload.ok===false){ status((payload&&payload.error)||'Conferma fallita.', false); return; }
+  if(item) item.status='Confermata';
+  save(); render();
+  status(payload.emailed ? 'Prenotazione confermata ed email inviata.' : 'Prenotazione confermata ma email non inviata.', !!payload.emailed);
+}
+function startAutoSync(){ if(autoSyncTimer) clearInterval(autoSyncTimer); setTimeout(sync,1200); autoSyncTimer=setInterval(sync,AUTO_SYNC_MS); }
+$('syncBtn').onclick=sync; $('exportBtn').onclick=exportCsv; $('resetBtn').onclick=resetAll;
+$('fRestaurant').onchange=render; $('fStatus').onchange=render; $('fDate').onchange=render; $('fSearch').oninput=render;
+load(); fillRestaurants(); render(); startAutoSync();
+</script>
+</body>
+</html>
